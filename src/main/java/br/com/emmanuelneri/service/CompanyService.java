@@ -22,7 +22,7 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    @Cacheable(cacheNames = Company.CACHE_NAME, key="'('+#identifier+')'")
+    @Cacheable(cacheNames = Company.CACHE_NAME, key="#identifier")
     public Company findbyIdentifier(final String identifier) {
         return companyRepository.findById(identifier)
                 .orElseThrow(() -> new EntityNotFoundException("Identifier not found: " + identifier));
@@ -33,7 +33,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    @CachePut(cacheNames = Company.CACHE_NAME, key="'('+#company.getIdentifier()+')'")
+    @CachePut(cacheNames = Company.CACHE_NAME, key="#company.getIdentifier()")
     public Company update(final Company company) {
         if(company.getIdentifier() == null) {
             throw new EntityNotFoundException("Identifier is empty");
@@ -42,7 +42,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    @CacheEvict(cacheNames = Company.CACHE_NAME, key="'('+#identifier+')'")
+    @CacheEvict(cacheNames = Company.CACHE_NAME, key="#identifier")
     public void delete(final String identifier) {
         if(identifier == null) {
             throw new EntityNotFoundException("Identifier is empty");
